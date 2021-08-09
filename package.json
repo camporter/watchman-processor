@@ -1,6 +1,6 @@
 {
-  "name": "watchman-processor",
-  "version": "3.0.2",
+  "name": "@camporter/watchman-processor",
+  "version": "3.0.4",
   "description": "File synchronizer with a simple dashboard",
   "keywords": [
     "watchman",
@@ -56,11 +56,12 @@
     "compile:test": "rollup -c rollup.config.js -e tslib -i test/index.ts -o test.js",
     "coverage": "npm run compile:test && istanbul cover _mocha test.js -x example/watchman-processor.config.js --report lcovonly",
     "coverage:remap": "npm run coverage && remap-istanbul --type html -i coverage/coverage.json -o coverage/report",
+    "coverage:remap": "npm run coverage && remap-istanbul --type html -i coverage/coverage.json -o coverage/report",
     "lint": "tslint -c tslint.json src/*.ts test/*.ts",
     "prepublish": "in-publish && npm run compile || not-in-publish",
     "test": "tsc --noemit && npm run lint && npm run coverage:remap",
     "test:unit": "mocha mocha built/test/**/*-test.js"
   },
-  "repository": "https://github.com/markis/watchman-processor.git",
+  "repository": "https://github.com/camporter/watchman-processor.git",
   "license": "MIT"
 }
