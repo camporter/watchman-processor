@@ -63,10 +63,15 @@ export class WatchmanProcessorImpl implements WatchmanProcessor {
       const expression = sub.watchExpression || ['allof', ['type', 'f']];
 
       for (const folder of sub.ignoreFolders) {
-        expression.push(['not', ['dirname', folder]]);
+          if (folder.charAt(0) === '/') {
+              // if a folder starts with a slash, ignore the folder from the base
+              expression.push(['not', ['dirname', folder.substring(1), ['depth', 'eq', 0]]]);
+          } else {
+              expression.push(['not', ['dirname', folder]]);
+          }
       }
 
-      promises.push(this.subscribe(resolvePath(sub.source), name, expression));
+      promises.push(...this.subscribe(resolvePath(sub.source), name, expression));
     }
     const render = terminal.render.bind(terminal);
     const errHandler = terminal.error.bind(terminal);
@@ -99,7 +104,7 @@ export class WatchmanProcessorImpl implements WatchmanProcessor {
       });
   }
 
-  private subscribe(folder: string, name: string, expression: WatchmanExpression): Promise<void> {
+  private subscribe(folder: string, name: string, expression: WatchmanExpression): Array<Promise<void>> {
     const terminal = this.terminal;
     const client = this.client;
     const sub = {
@@ -109,12 +114,20 @@ export class WatchmanProcessorImpl implements WatchmanProcessor {
     };
 
     terminal.debug(`subscribe: ${name}`);
-    return new Promise<void>((resolve, reject) => {
+
+    const watchPromise = new Promise<void>((resolve, reject) => {
+        client.command(['watch', folder],
+            (error: string) => {
+                error ? reject('failed to watch: ' + error) : resolve();
+            });
+    });
+    const subscribePromise = new Promise<void>((resolve, reject) => {
       client.command(['subscribe', folder, name, sub],
         (error: string) => {
-          error ? reject('failed to start: ' + error) : resolve();
+          error ? reject('failed to subscribe: ' + error) : resolve();
         });
     });
+    return [watchPromise, subscribePromise];
   }
 
   private unsubscribe(folder: string, name: string): Promise<string | void> {
