@@ -26,7 +26,7 @@ brew install watchman
 Install watchman-processor
 
 ```bash
-npm install watchman-processor -g
+npm install -g @camporter/watchman-processor
 ```
 
 Create configuration file
