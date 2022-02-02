@@ -1,4 +1,4 @@
-export type WatchmanExpression = Array<string | Array<string | string[] | Array<string | Array<string | number>>>>;
+export type WatchmanExpression = (string | (string | string[] | (string | (string | number)[])[])[])[];
 
 export interface WatchmanProcessor {
   /**
