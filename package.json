@@ -1,6 +1,6 @@
 {
   "name": "@camporter/watchman-processor",
-  "version": "3.2.1",
+  "version": "3.2.2",
   "description": "File synchronizer with a simple dashboard",
   "keywords": [
     "watchman",
