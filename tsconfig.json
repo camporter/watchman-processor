@@ -1,11 +1,12 @@
 {
   "compilerOptions": {
-    "module": "es6",
-    "target": "es6",
-    "lib": [ "es6" ],
+    "module": "es2022",
+    "target": "es2021",
+    "lib": ["es2021"],
     "outDir": "built/",
     "baseUrl": "types",
     "moduleResolution": "node",
+    "allowSyntheticDefaultImports": true,
     "sourceMap": true,
     "importHelpers": true,
     "noImplicitAny": true,

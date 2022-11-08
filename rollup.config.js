@@ -1,4 +1,4 @@
-const typescript = require('rollup-plugin-typescript');
+import typescript from '@rollup/plugin-typescript';
 
 module.exports = {
   input: './src/index.ts',
@@ -18,12 +18,10 @@ module.exports = {
     'path',
     'sinon',
     'reflect-metadata',
-    'ts-helpers',
     'tslib'
   ],
+  strictDeprecations: true,
   plugins: [
-    typescript({
-      typescript: require('typescript')
-    }),
+    typescript(),
   ]
 };

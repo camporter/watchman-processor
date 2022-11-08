@@ -14,19 +14,17 @@ describe('Cli', () => {
     container.restore();
   });
 
-  function setArgs(...args: string[]) {
-    container.rebind(Bindings.Process).toConstantValue({
-      argv: args,
-      cwd: () => 'test',
-    });
-  }
+  const setArgs = (...args: string[]) => {
+      container.rebind(Bindings.Process).toConstantValue({
+          argv: args,
+          cwd: () => 'test',
+      });
+  };
 
-  function getArgs() {
-    const cli = container.get<interfaces.Cli>(Bindings.Cli);
-    const args = cli.getArguments();
-
-    return args;
-  }
+  const getArgs = () => {
+      const cli = container.get<interfaces.Cli>(Bindings.Cli);
+      return cli.getArguments();
+  };
 
   it('should parse the -i flag', () => {
     setArgs('-i');

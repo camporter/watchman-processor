@@ -15,7 +15,7 @@
   "typings": "index.d.ts",
   "preferGlobal": true,
   "engines": {
-    "node": ">=6.0"
+    "node": ">=16"
   },
   "files": [
     "bin/watchman-processor",
@@ -26,38 +26,39 @@
     "README.md"
   ],
   "dependencies": {
-    "fb-watchman": "^2.0.1",
+    "fb-watchman": "^2.0.2",
     "inversify": "^5.1.1",
     "reflect-metadata": "^0.1.13",
-    "tslib": "^2.3.1"
+    "tslib": "^2.4.1"
   },
   "devDependencies": {
+    "@rollup/plugin-typescript": "^9.0.2",
     "@types/chai": "^4.2.22",
     "@types/mocha": "^9.0.0",
-    "@types/node": "^16.11.6",
+    "@types/node": "^18.11.9",
     "@types/sinon": "^10.0.6",
+    "@typescript-eslint/eslint-plugin": "^5.42.1",
+    "@typescript-eslint/parser": "^5.42.1",
     "chai": "^4.3.4",
+    "eslint": "^8.27.0",
+    "eslint-plugin-jsdoc": "^39.6.2",
     "if-ver": "^1.1.0",
     "in-publish": "^2.0.1",
     "istanbul": "^0.4.5",
-    "mocha": "^9.1.3",
+    "mocha": "^9.2.2",
     "mocha-lcov-reporter": "^1.3.0",
     "pre-commit": "^1.2.2",
     "remap-istanbul": "^0.13.0",
-    "rollup": "^2.59.0",
-    "rollup-plugin-typescript": "^1.0.1",
+    "rollup": "^2.79.1",
     "sinon": "^12.0.1",
-    "ts-helpers": "^1.1.2",
-    "tslint": "^6.1.3",
-    "typescript": "^4.4.4"
+    "typescript": "^4.8.4"
   },
   "scripts": {
     "compile": "rollup -c",
     "compile:test": "rollup -c rollup.config.js -e tslib -i test/index.ts -o test.js",
     "coverage": "npm run compile:test && istanbul cover _mocha test.js -x example/watchman-processor.config.js --report lcovonly",
     "coverage:remap": "npm run coverage && remap-istanbul --type html -i coverage/coverage.json -o coverage/report",
-    "coverage:remap": "npm run coverage && remap-istanbul --type html -i coverage/coverage.json -o coverage/report",
-    "lint": "tslint -c tslint.json src/*.ts test/*.ts",
+    "lint": "eslint src test --fix",
     "prepublish": "in-publish && npm run compile || not-in-publish",
     "test": "tsc --noemit && npm run lint && npm run coverage:remap",
     "test:unit": "mocha mocha built/test/**/*-test.js"

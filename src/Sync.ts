@@ -9,7 +9,7 @@ type SeenMap = Map<string, void>;
 
 @injectable()
 export class SyncImpl implements Sync {
-  private readonly processes: Set<ChildProcess>;
+  readonly processes: Set<ChildProcess>;
 
   constructor(
     @inject(Bindings.Config)
@@ -42,7 +42,7 @@ export class SyncImpl implements Sync {
 
     /* istanbul ignore else */
     if (processes.size > 0) {
-      terminal.debug(`sync: kill rsync`);
+      terminal.debug('sync: kill rsync');
       processes.forEach(proc => {
         proc.kill();
       });
@@ -52,7 +52,7 @@ export class SyncImpl implements Sync {
   private _syncAllFiles(subConfig: SubConfig): Promise<void> {
     const { config } = this;
     const { destination, ignoreFolders, source } = subConfig;
-    const excludes = (`--exclude '${ignoreFolders.join(`' --exclude '`)}'`).split(' ');
+    const excludes = (`--exclude '${ignoreFolders.join('\' --exclude \'')}'`).split(' ');
     const deleteArg = config.syncDelete ? ['--delete'] : [];
     const args = ['-avz'].concat(deleteArg, excludes, [source, destination]);
 
@@ -63,9 +63,9 @@ export class SyncImpl implements Sync {
     files = getUniqueFileFolders(files).concat(files);
     const { config } = this;
     const { destination, source } = subConfig;
-    const includes = (`--include '${files.join(`' --include '`)}'`).split(' ');
+    const includes = (`--include '${files.join('\' --include \'')}'`).split(' ');
     const deleteArg = config.syncDelete ? ['--delete'] : [];
-    const args = ['-avz'].concat(deleteArg, includes, ['--exclude', `'*'`, source, destination]);
+    const args = ['-avz'].concat(deleteArg, includes, ['--exclude', '\'*\'', source, destination]);
 
     return this._exec(args);
   }
@@ -179,16 +179,9 @@ function getFolderParts(folderParts: string[], seen: SeenMap): string[] {
  */
 function exists(values: string[], stringToSearch: string): boolean {
   for (const value of values) {
-    if (startsWith(stringToSearch, value)) {
+    if (value.startsWith(stringToSearch)) {
       return true;
     }
   }
   return false;
-}
-
-/**
- * Return whether a string starts with another string
- */
-function startsWith(value: string, searchString: string): boolean {
-  return value.substr(0, searchString.length) === searchString;
 }

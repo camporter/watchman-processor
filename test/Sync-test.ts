@@ -4,9 +4,8 @@ import { Config } from '../interfaces';
 import { SyncImpl as Sync } from '../src/Sync';
 import { TerminalImpl as Terminal } from '../src/Terminal';
 
-function noop() {
-  // do nothing
-}
+const noop = () => {};
+
 const terminal: Terminal = { debug: noop, error: noop } as any;
 const config: Config = {
   maxFileLength: 100,
@@ -49,7 +48,7 @@ describe('Sync', () => {
     // Setup
     const longList = new Array(1000);
     for (let i = 0, length = longList.length; i < length; i++) {
-      longList[i] = 'example1/' + i + '.js' ;
+      longList[i] = `example1/${i}.js`;
     }
     const spawn = stub().returns({on: stub(), stderr: {on: stub()}, stdout: {on: stub()}});
     const sync = new Sync(config, terminal, spawn);
@@ -94,8 +93,7 @@ describe('Sync', () => {
     const killStub = stub();
     const spawn = stub().returns({on: stub(), stderr: {on: stub()}, stdout: {on: stub()}});
     const sync = new Sync(config, terminal, spawn);
-    /* tslint:disable-next-line:no-string-literal */
-    sync['processes'].add({ kill: killStub } as any);
+    sync.processes.add({ kill: killStub } as any);
 
     // Execute
     sync.end();

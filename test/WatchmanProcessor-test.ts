@@ -2,7 +2,6 @@ import * as chai from 'chai';
 import { Client } from 'fb-watchman';
 import 'reflect-metadata';
 import * as sinon from 'sinon';
-import 'ts-helpers';
 import { Config } from '../interfaces';
 import { SyncImpl as Sync } from '../src/Sync';
 import { TerminalImpl as Terminal } from '../src/Terminal';

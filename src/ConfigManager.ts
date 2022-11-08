@@ -40,12 +40,11 @@ export class ConfigManagerImpl implements ConfigManager {
     @inject(Bindings.Process)
     private readonly process: NodeJS.Process,
   ) {
-    /* istanbul ignore next */
-    const homeFolder = this.process.env[(this.process.platform === 'win32') ? 'USERPROFILE' : 'HOME'];
+    const homeFolder = this.process.env[(this.process.platform === 'win32') ? 'USERPROFILE' : 'HOME'] as string;
     const args = this.cli.getArguments();
 
     this.options = Object.assign({
-      confFile: args.config || resolve(homeFolder + '/.watchman-processor.config.js'),
+      confFile: args.config || resolve(`${homeFolder}/.watchman-processor.config.js`),
       exampleConfFile: resolve(__dirname + '/example/watchman-processor.config.js'),
     });
   }
@@ -60,14 +59,14 @@ export class ConfigManagerImpl implements ConfigManager {
       if (!existsSync(configFile)) {
         const error = new Error(INIT_MSG);
         error.name = 'init';
-        throw error;
+        return error;
       }
       const userConfig = require(configFile) as Config;
       const config: Config = this.cachedConfig = Object.assign({}, DEFAULT_CONFIG, userConfig);
 
       /* istanbul ignore if */
       if (!config.subscriptions) {
-        throw new Error('No subscriptions defined');
+        return new Error('No subscriptions defined');
       }
 
       // set the default settings for subscription configs
@@ -86,10 +85,14 @@ export class ConfigManagerImpl implements ConfigManager {
     confFile: string = this.options.confFile,
     /* istanbul ignore next */
     exampleConfFile: string = this.options.exampleConfFile,
-  ): Promise<void> {
+  ): Promise<boolean> {
     const { options, process } = this;
 
-    return new Promise<void>((done, reject) => {
+    if (existsSync(confFile)) {
+        return Promise.resolve(false);
+    }
+
+    return new Promise<boolean>((done, reject) => {
       const reader = createReadStream(exampleConfFile);
       const writer = createWriteStream(confFile);
 
@@ -97,7 +100,7 @@ export class ConfigManagerImpl implements ConfigManager {
       writer.on('error', reject);
       writer.on('close', () => {
         process.stdout.write('Done.  "' + options.confFile + '" created.\n');
-        done();
+        done(true);
       });
       reader.pipe(writer);
     });

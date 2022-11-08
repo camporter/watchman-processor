@@ -10,7 +10,6 @@ types/
 
 rollup.config.json
 tsconfig.json
-tslint.json
 typings.json
 
 ### Vim template

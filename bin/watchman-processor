@@ -1,12 +1,3 @@
 #!/usr/bin/env node
 
-process.title = 'watchman-processor';
-var watchman = require('../index');
-if (watchman && typeof watchman.start === 'function') {
-  watchman.start()
-}
-process.on('SIGINT', function() {
-  watchman.end().then(function() {
-    process.exit();
-  });
-});
+require('../index');

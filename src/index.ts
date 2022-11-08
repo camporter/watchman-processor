@@ -11,8 +11,16 @@ const watchmanProcessor = container.get<WatchmanProcessor>(Bindings.WatchmanProc
 const args = cli.getArguments();
 let processor = watchmanProcessor;
 
+process.title = 'watchman-processor';
+
 if (args.init) {
-  configManager.createConfig();
+  configManager.createConfig()
+    .then((configCreated: boolean) => {
+      if (!configCreated) {
+        process.stderr.write('Configuration file already exists!\n');
+        process.exit(1);
+      }
+    });
 } else {
   const config = configManager.getConfig();
   if (config instanceof Error) {
@@ -25,6 +33,12 @@ if (args.init) {
       }
     }
   }
+  processor.start()
+    process.on('SIGINT', function() {
+      processor.end().then(function() {
+        process.exit();
+      });
+    });
 }
 
 export default processor;

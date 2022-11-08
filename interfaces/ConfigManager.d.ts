@@ -14,5 +14,5 @@ export interface ConfigManager {
    *
    * @memberOf ConfigManager
    */
-  createConfig(exampleConfFile?: string): Promise<void>;
+  createConfig(exampleConfFile?: string): Promise<boolean>;
 }

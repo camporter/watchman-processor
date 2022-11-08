@@ -144,7 +144,7 @@ export class WatchmanProcessorImpl implements WatchmanProcessor {
     const terminal = this.terminal;
     const client = this.client;
 
-    terminal.debug(`watchman: shutdown`);
+    terminal.debug('watchman: shutdown');
     return new Promise<string | void>(resolve => {
       client.command(['shutdown-server'], resolve);
     });
